@@ -21,26 +21,21 @@
 
 buildPythonPackage rec {
   pname = "build";
-  version = "1.2.2.post1";
-  format = "pyproject";
-
-  disabled = pythonOlder "3.7";
+  version = "1.3.0";
+  pyproject = true;
 
   src = fetchFromGitHub {
     owner = "pypa";
     repo = "build";
     rev = "refs/tags/${version}";
-    hash = "sha256-PHS7CjdKo5u4VTpbo409zLQAOmslV9bX0j0S83Gdv1U=";
+    hash = "sha256-w2YKQzni8e6rpnQJH2J0bHzRigjWOlWiI8Po5d3ZqS8=";
   };
 
-  postPatch = ''
-    # not strictly required, causes circular dependency cycle
-    sed -i '/importlib-metadata >= 4.6/d' pyproject.toml
-  '';
+  build-system = [ flit-core ];
 
-  nativeBuildInputs = [ flit-core ];
+  pythonRemoveDeps = [ "importlib-metadata" ];
 
-  propagatedBuildInputs = [
+  dependencies = [
     packaging
     pyproject-hooks
   ]
